@@ -1,0 +1,5 @@
+
+.DS_Store
+.gitignore
+.idea/workspace.xml
+MNIST_data/.DS_Store
