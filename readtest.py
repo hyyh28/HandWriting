@@ -1,2 +1,3 @@
-from ReadData import read_data
-data = read_data()
+from ReadData import *
+data = LetterData()
+print(data.target)
