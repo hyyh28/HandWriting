@@ -1,4 +1,3 @@
-import tensorflow.examples.tutorials.mnist.input_data as putin
 import tensorflow as tf
 from ReadData import *
 
@@ -28,11 +27,13 @@ w = tf.Variable(tf.zeros([128, 26]))
 b = tf.Variable(tf.zeros(26))
 y = tf.nn.softmax(tf.matmul(x, w) + b)
 y_ = tf.placeholder("float", [None, 26])
+
 W_conv1 = weight_variable([8, 4, 1, 32])
 b_conv1 = bias_variable([32])
 x_image = tf.reshape(x, [-1, 16, 8, 1])
 h_conv1 = tf.nn.relu(conv2d(x_image, W_conv1) + b_conv1)
 h_pool1 = max_pool_2x2(h_conv1)
+
 
 W_conv2 = weight_variable([8, 4, 32, 64])
 b_conv2 = bias_variable([64])
@@ -52,21 +53,19 @@ y_conv = tf.nn.softmax(tf.matmul(h_fc1_drop, W_fc2) + b_fc2)
 
 cross_entropy = tf.reduce_mean(
     tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y_conv))
-train_step = tf.train.AdamOptimizer(1e-3).minimize(cross_entropy)
+train_step = tf.train.AdamOptimizer(5e-3).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv, 1), tf.argmax(y_, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
 with tf.Session() as sess:
     save = tf.train.Saver()
     sess.run(tf.global_variables_initializer())
-    for i in range(30000):
-        batch = take_test_set(50, letterdata)
-        if i % 100 == 0:
-            train_accuracy = accuracy.eval(feed_dict={
-                x: batch['data'], y_: batch['target'], keep_prob: 1.0})
-            print('step %d, training accuracy %g' % (i, train_accuracy))
+    for i in range(5):
+        batch = take_test_set(1000, letterdata)
+        train_accuracy = accuracy.eval(feed_dict={
+            x: batch['data'], y_: batch['target'], keep_prob: 1.0})
+        print('step %d, training accuracy %g' % (i, train_accuracy))
         train_step.run(feed_dict={x: batch['data'], y_: batch['target'], keep_prob: 0.5})
     save.save(sess, './HandWritingModel/Model')
     print('test accuracy %f' % accuracy.eval(feed_dict={
-        x: letterdata.data, y_: letterdata.target, keep_prob: 1.0}))
-
+        x: letterdata.data[0:23000], y_: letterdata.target[0:23000], keep_prob: 1.0}))
