@@ -54,14 +54,15 @@ h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)
 W_fc2 = weight_variable([256, 26])
 b_fc2 = bias_variable([26])
 y_conv = tf.nn.softmax(tf.matmul(h_fc1, W_fc2) + b_fc2)
-
 saver = tf.train.Saver()
 src = './Source/9.png'
 testdata = test(src)
+print('309XX委员会友情出品')
 with tf.Session() as sess:
     saver.restore(sess, './HandWritingModel/Model')
     graph = tf.get_default_graph()
     result = sess.run(y_conv, feed_dict={x: testdata})
-    print('Model restored.')
+    #print('Model restored.')
+    print("The Predicting Outcomes is: ")
     for letter in result:
         print(arry2letter(letter))
