@@ -1,5 +1,5 @@
 import tensorflow as tf
-
+from imageConduct import test
 from ReadData import take_test_set, LetterData
 
 def weight_variable(shape):
@@ -56,11 +56,12 @@ b_fc2 = bias_variable([26])
 y_conv = tf.nn.softmax(tf.matmul(h_fc1, W_fc2) + b_fc2)
 
 saver = tf.train.Saver()
-
+src = './Source/9.png'
+testdata = test(src)
 with tf.Session() as sess:
     saver.restore(sess, './HandWritingModel/Model')
     graph = tf.get_default_graph()
-    result = sess.run(y_conv, feed_dict={x: LetterData.data[0:20]})
+    result = sess.run(y_conv, feed_dict={x: testdata})
     print('Model restored.')
     for letter in result:
         print(arry2letter(letter))
